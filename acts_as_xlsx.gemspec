@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.files = `git ls-files`.split("\n")
 
-  s.add_runtime_dependency 'axlsx'
+  s.add_runtime_dependency 'caxlsx'
   s.add_runtime_dependency 'i18n'
   s.add_runtime_dependency 'rails', '>= 5.0'
   s.add_runtime_dependency 'zeitwerk'
