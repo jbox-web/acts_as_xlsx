@@ -10,6 +10,6 @@ RAILS_VERSIONS = %w[
 RAILS_VERSIONS.each do |version|
   appraise "rails_#{version}" do
     gem 'rails', version
-    gem 'sqlite3', '~> 1.4.0' if version == '6.0.0'
+    gem 'sqlite3', '~> 1.4.0' if version == '6.0.1'
   end
 end
