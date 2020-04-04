@@ -15,7 +15,7 @@ Put this in your `Gemfile` :
 ```ruby
 git_source(:github){ |repo_name| "https://github.com/#{repo_name}.git" }
 
-gem 'acts_as_xlsx', github: 'jbox-web/acts_as_xlsx', tag: '1.0.0'
+gem 'acts_as_xlsx', github: 'jbox-web/acts_as_xlsx', tag: '1.1.0'
 ```
 
 then run `bundle install`.
