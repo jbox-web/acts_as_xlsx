@@ -21,7 +21,7 @@ describe 'Basic tests' do
 
   describe 'xlsx_columns' do
     it 'should return xslx data' do
-      expect(Post.xlsx_columns).to eq Post.column_names.map { |c| c.to_sym }
+      expect(Post.xlsx_columns).to eq Post.column_names.map(&:to_sym)
     end
   end
 

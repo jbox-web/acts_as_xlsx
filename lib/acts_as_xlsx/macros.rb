@@ -6,7 +6,7 @@ module ActsAsXlsx
     def acts_as_xlsx(options = {})
       cattr_accessor :xlsx_i18n, :xlsx_columns
       self.xlsx_i18n = options.delete(:i18n) || false
-      self.xlsx_columns = options.delete(:columns)
+      self.xlsx_columns = options.delete(:columns) { column_names.map(&:to_sym) }
       extend ActsAsXlsx::ClassMethods
     end
 

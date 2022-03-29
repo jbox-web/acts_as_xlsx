@@ -13,8 +13,6 @@ module ActsAsXlsx
     # @option options [Package] package An Axlsx::Package. When this is provided the output will be added to the package as a new sheet.  # @option options [String] name This will be used to name the worksheet added to the package. If it is not provided the name of the table name will be humanized when i18n is not specified or the I18n.t for the table name.
     # @see Worksheet#add_row
     def to_xlsx(options = {})
-      self.xlsx_columns = column_names.map(&:to_sym) if xlsx_columns.nil?
-
       row_style = options.delete(:style)
       header_style = options.delete(:header_style) || row_style
       types = [options.delete(:types) || []].flatten
