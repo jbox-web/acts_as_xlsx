@@ -11,7 +11,6 @@ require File.expand_path('dummy/config/environment.rb', __dir__)
 
 # Load test gems
 require 'rspec/rails'
-require 'rspec/retry'
 
 # Load our own config
 require_relative 'config_rspec'

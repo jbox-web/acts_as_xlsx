@@ -8,10 +8,4 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
-
-  if ENV.key?('GITHUB_ACTIONS')
-    config.around(:each) do |ex|
-      ex.run_with_retry retry: 3
-    end
-  end
 end
