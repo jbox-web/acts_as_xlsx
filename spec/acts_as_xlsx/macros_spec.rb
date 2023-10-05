@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Basic tests' do
+RSpec.describe 'Basic tests' do
 
   describe 'to_xlsx_with_package' do
     let(:p) { Post.to_xlsx }
