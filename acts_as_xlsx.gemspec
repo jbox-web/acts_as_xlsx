@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = ActsAsXlsx::VERSION::STRING
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Nicolas Rodriguez']
-  s.email       = ['nicoladmin@free.fr']
+  s.email       = ['nico@nicoladmin.fr']
   s.homepage    = 'https://github.com/jbox-web/acts_as_xlsx'
   s.summary     = 'A Rails roles solution.'
   s.license     = 'MIT'
