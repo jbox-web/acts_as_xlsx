@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Configure RSpec
 RSpec.configure do |config|
   # Use DB agnostic schema by default
