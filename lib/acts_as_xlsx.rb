@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+# require external dependencies
 require 'axlsx'
-
 require 'zeitwerk'
-loader = Zeitwerk::Loader.for_gem
-loader.setup
+
+# load zeitwerk
+Zeitwerk::Loader.for_gem.tap do |loader| # rubocop:disable Style/SymbolProc
+  loader.setup
+end
 
 module ActsAsXlsx
-  require 'acts_as_xlsx/engine' if defined?(Rails)
+  require_relative 'acts_as_xlsx/engine' if defined?(Rails)
 end
