@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = 'A Rails roles solution.'
   s.license     = 'MIT'
 
-  s.required_ruby_version = '>= 3.1.0'
+  s.required_ruby_version = '>= 3.2.0'
 
   s.files = Dir['README.md', 'LICENSE', 'lib/**/*.rb']
 
