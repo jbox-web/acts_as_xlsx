@@ -8,7 +8,7 @@ RSpec.describe ActsAsXlsx::Macros do
     let(:p) { Post.to_xlsx }
 
     it 'returns xslx data' do
-      Post.to_xlsx package: p, name: 'another posts'
+      Post.to_xlsx package: p, name: 'another posts' # rubocop:disable RSpec/Output
       expect(p.workbook.worksheets.size).to eq 2
     end
   end
