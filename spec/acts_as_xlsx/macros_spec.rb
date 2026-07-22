@@ -75,4 +75,39 @@ RSpec.describe ActsAsXlsx::Macros do
       expect(sheet.rows.last.cells.last.value).to eq Post.last.comments.last.author.name
     end
   end
+
+  describe 'chained_method_with_nil_intermediate' do
+    let(:orphan) { Post.create!(name: 'orphan', title: 'no comments', content: 'x', votes: 0) }
+    let(:p) { Post.to_xlsx data: [orphan], columns: %i[name comments.first.author.name] }
+    let(:sheet) { p.workbook.worksheets.first }
+
+    after { orphan.destroy }
+
+    it 'yields an empty string instead of raising' do
+      expect(sheet.rows.last.cells.last.value).to eq ''
+    end
+  end
+
+  describe 'i18n_passed_as_call_option' do
+    let(:p) { Post.to_xlsx i18n: true, columns: %i[name] }
+    let(:sheet) { p.workbook.worksheets.first }
+
+    before do
+      I18n.backend.store_translations(:en, activerecord: { attributes: { posts: 'Articles', post: { name: 'Nom' } } })
+    end
+
+    it 'resolves i18n:true to the default attributes path' do
+      expect(sheet.name).to eq 'Articles'
+      expect(sheet.rows.first.cells.first.value).to eq 'Nom'
+    end
+  end
+
+  describe 'single_type_symbol' do
+    let(:p) { Post.to_xlsx columns: %i[votes votes], types: :string }
+    let(:sheet) { p.workbook.worksheets.first }
+
+    it 'applies to every column' do
+      expect(sheet.rows.last.cells.map(&:type)).to all(eq(:string))
+    end
+  end
 end

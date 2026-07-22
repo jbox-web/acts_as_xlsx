@@ -15,17 +15,22 @@ module ActsAsXlsx
     # If it is not provided the name of the table name will be humanized when i18n is not specified or the I18n.t for the table name.
     # @see Worksheet#add_row
     def to_xlsx(options = {}) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
-      row_style = options.delete(:style)
-      header_style = options.delete(:header_style) || row_style
-      types = [options.delete(:types) || []].flatten
+      # A single type (Symbol) is applied to every cell; an Array is applied by index.
+      # Passing it through untouched preserves that Axlsx semantics.
+      types = options.delete(:types)
 
-      i18n = options.delete(:i18n) || xlsx_i18n
+      # options.key? so an explicit `i18n: false` can override a class-level `i18n: true`.
+      i18n = options.key?(:i18n) ? options.delete(:i18n) : xlsx_i18n
       columns = options.delete(:columns) || xlsx_columns
 
       p = options.delete(:package) || Axlsx::Package.new
+      row_style = options.delete(:style)
       row_style = p.workbook.styles.add_style(row_style) unless row_style.nil?
-      header_style = p.workbook.styles.add_style(header_style) unless header_style.nil?
-      i18n = 'activerecord.attributes' if xlsx_i18n == true
+      header_style = options.delete(:header_style)
+      # Reuse the already-registered row_style index when no header_style is given, to avoid a duplicate style.
+      header_style = header_style.nil? ? row_style : p.workbook.styles.add_style(header_style)
+
+      i18n = 'activerecord.attributes' if i18n == true
       sheet_name = options.delete(:name) || (i18n ? I18n.t("#{i18n}.#{table_name.underscore}") : table_name.humanize)
       data = options.delete(:data) || where(options[:where]).order(options[:order]).to_a
       data.compact! if data.respond_to?(:compact!)
@@ -46,11 +51,11 @@ module ActsAsXlsx
         data.each do |r|
           row_data = columns.map do |c|
             if c.to_s.include?('.')
-              v = r
-              c.to_s.split('.').each { |method| v = v.nil? ? '' : v.send(method) }
-              v
+              # Walk the chain, short-circuiting to nil on the first nil link (no further sends).
+              v = c.to_s.split('.').reduce(r) { |acc, method| acc&.public_send(method) }
+              v.nil? ? '' : v
             else
-              r.send(c)
+              r.public_send(c)
             end
           end
           sheet.add_row(row_data, style: row_style, types: types)

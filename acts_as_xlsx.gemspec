@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.authors     = ['Nicolas Rodriguez']
   s.email       = ['nico@nicoladmin.fr']
   s.homepage    = 'https://github.com/jbox-web/acts_as_xlsx'
-  s.summary     = 'A Rails roles solution.'
+  s.summary     = 'Export any ActiveRecord model to an xlsx spreadsheet using caxlsx.'
   s.license     = 'MIT'
 
   s.required_ruby_version = '>= 3.2.0'
