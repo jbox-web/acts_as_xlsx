@@ -3,17 +3,28 @@
 module ActsAsXlsx
   module ClassMethods
 
-    # Maps the AR class to an Axlsx package
-    # options are passed into AR find
-    # @param [Array, Array] columns as an array of symbols or a symbol that defines the attributes or methods to render in the sheet.
-    # @option options [Integer] header_style to apply to the first row of field names
-    # @option options [Array, Symbol] types an array of Axlsx types for each cell in data rows or a single type that will be applied to all types.
-    # @option options [Integer, Array] style The style to pass to Worksheet#add_row
-    # @option options [String] i18n The path to i18n attributes. (usually activerecord.attributes)
-    # @option options [Package] package An Axlsx::Package. When this is provided the output will be added to the package as a new sheet.
-    # @option options [String] name This will be used to name the worksheet added to the package.
-    # If it is not provided the name of the table name will be humanized when i18n is not specified or the I18n.t for the table name.
-    # @see Worksheet#add_row
+    # Renders the class's records into an Axlsx worksheet and returns the enclosing package.
+    #
+    # With no :data option the records are fetched via `where(options[:where]).order(options[:order])`,
+    # so :where and :order are forwarded to ActiveRecord untouched.
+    #
+    # @param [Hash] options
+    # @option options [Array<Symbol>] columns The attributes or methods to render, one per column.
+    #   A symbol containing '.' (e.g. :'comments.first.author.name') is walked down the object graph,
+    #   short-circuiting to '' on the first nil link. Defaults to the class-level xlsx_columns.
+    # @option options [Array<Object>] data Explicit records to render, bypassing the AR query above.
+    # @option options [Hash, String] where Conditions forwarded to `where` when :data is absent.
+    # @option options [Symbol, Hash, String] order Ordering forwarded to `order` when :data is absent.
+    # @option options [Hash, Symbol] style Style applied to every data row (passed to Axlsx::Styles#add_style).
+    # @option options [Hash, Symbol] header_style Style applied to the header row. Defaults to :style when omitted.
+    # @option options [Array<Symbol>, Symbol] types An Axlsx cell type per column, or a single type applied to all.
+    # @option options [Boolean, String] i18n When true, resolves labels under 'activerecord.attributes';
+    #   a String is used as the base translation path. Overrides the class-level xlsx_i18n for this call.
+    # @option options [Axlsx::Package] package An existing package to append the worksheet to, enabling
+    #   multiple models in one workbook. A fresh package is created when omitted.
+    # @option options [String] name The worksheet name. Defaults to the i18n-translated or humanized table name.
+    # @return [Axlsx::Package] the package containing the rendered worksheet (unchanged if the data set is empty).
+    # @see Axlsx::Worksheet#add_row
     def to_xlsx(options = {}) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
       # A single type (Symbol) is applied to every cell; an Array is applied by index.
       # Passing it through untouched preserves that Axlsx semantics.
