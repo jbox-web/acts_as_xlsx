@@ -110,4 +110,30 @@ RSpec.describe ActsAsXlsx::Macros do
       expect(sheet.rows.last.cells.map(&:type)).to all(eq(:string))
     end
   end
+
+  describe 'row_style_option' do
+    let(:p) { Post.to_xlsx columns: %i[name], style: { bg_color: 'FF0000' } }
+    let(:sheet) { p.workbook.worksheets.first }
+
+    it 'applies the registered style to data rows' do
+      expect(sheet.rows.last.cells.last.style).not_to eq 0
+    end
+  end
+
+  describe 'header_style_option' do
+    let(:p) { Post.to_xlsx columns: %i[name], header_style: { b: true } }
+    let(:sheet) { p.workbook.worksheets.first }
+
+    it 'applies a distinct style to the header row' do
+      expect(sheet.rows.first.cells.first.style).not_to eq 0
+    end
+  end
+
+  describe 'empty_data' do
+    let(:p) { Post.to_xlsx data: [] }
+
+    it 'returns the package without adding a worksheet' do
+      expect(p.workbook.worksheets).to be_empty
+    end
+  end
 end
